@@ -1,10 +1,20 @@
 package net.orchitech.hellofelix;
 
-import java.util.Dictionary;
+import java.io.File;
 
-import org.osgi.service.cm.ManagedService;
+import org.apache.felix.fileinstall.ArtifactInstaller;
 
-public interface HelloService extends ManagedService{
+public interface HelloService extends ArtifactInstaller{
+
     @Override
-    void updated(Dictionary<String, ?> properties);
+    boolean canHandle(File artifact);
+
+    @Override
+    void install(File artifact) throws Exception;
+
+    @Override
+    void uninstall(File artifact) throws Exception;
+
+    @Override
+    void update(File artifact) throws Exception;
 }

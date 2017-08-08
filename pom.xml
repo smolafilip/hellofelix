@@ -34,6 +34,11 @@
       <version>3.4.2</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.ipojo.annotations</artifactId>
+      <version>1.12.1</version>
+    </dependency>
 
     <!-- Test dependencies -->
     <dependency>
@@ -53,8 +58,8 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Export-Package>net.orchitech.hellofelix.api</Export-Package>
-            <Private-Package>net.orchitech.hellofelix.*</Private-Package>
+            <Export-Package>net.orchitech.hellofelix</Export-Package>
+            <Private-Package>net.orchitech.hellofelix.impl</Private-Package>
             <Bundle-Activator>net.orchitech.hellofelix.Activator</Bundle-Activator>
           </instructions>
         </configuration>
