@@ -15,5 +15,7 @@ public interface HelloService extends ManagedService{
 
     void announce();
 
+    void stop();
+
     void start(Dictionary<String, ?> properties);
 }

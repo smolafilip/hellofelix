@@ -25,7 +25,7 @@ public class HelloFactoryImpl implements HelloFactory{
         } else {
             //Create and register the hello service
             HelloService helloService = new HelloServiceImpl();
-            System.out.printf("Service props are: %s\n", properties);
+            //System.out.printf("Service props are: %s\n", properties);
             helloService.start(properties);
             existingServices.put(pid, helloService);
         }
@@ -33,7 +33,17 @@ public class HelloFactoryImpl implements HelloFactory{
 
     @Override
     public void deleted(String pid) {
-        existingServices.remove(pid);
+        //Stop and remove the service on deletion
+        if(existingServices.containsKey(pid)){
+            existingServices.get(pid).stop();
+            existingServices.remove(pid);
+        }
+    }
+
+    @Override
+    public void stop(){
+        //System.out.println("Stopping all Hello services.");
+        existingServices.forEach((k, v) -> v.stop());
     }
 
 }

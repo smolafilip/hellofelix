@@ -13,6 +13,7 @@ import net.orchitech.hellofelix.impl.HelloFactoryImpl;
 
 public class Activator implements BundleActivator {
     private ServiceRegistration factoryRegistration;
+    private HelloFactory helloFactory;
     //private ServiceRegistration configRegistration;
 
     @Override
@@ -26,10 +27,10 @@ public class Activator implements BundleActivator {
         configRegistration = context.registerService(configClasses, configService, configProperties);*/
 
         //Create and register the hello factory
-        HelloFactory helloFactory = new HelloFactoryImpl();
+        helloFactory = new HelloFactoryImpl();
         Dictionary<String, String> factoryProperties = new Hashtable<>();
         factoryProperties.put(Constants.SERVICE_PID, "hello");
-        System.out.printf("Factory props are: %s\n", factoryProperties);
+        //System.out.printf("Factory props are: %s\n", factoryProperties);
         String[] helloClasses = new String[]{HelloFactory.class.getName(), ManagedServiceFactory.class.getName()};
         factoryRegistration = context.registerService(helloClasses, helloFactory, factoryProperties);
     }
@@ -38,6 +39,7 @@ public class Activator implements BundleActivator {
     public void stop(BundleContext context){
         System.out.println("Stopping hellofelix");
         if(factoryRegistration != null){
+            helloFactory.stop();
             factoryRegistration.unregister();
             factoryRegistration = null;
         }

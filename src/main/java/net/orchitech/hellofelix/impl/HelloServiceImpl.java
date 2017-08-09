@@ -10,6 +10,7 @@ public class HelloServiceImpl implements HelloService{
 
     private volatile String name = NULL_NAME;
     private String pid;
+    private Thread announcerThread;
 
     @Override
     public void start(Dictionary<String, ?> properties){
@@ -23,7 +24,11 @@ public class HelloServiceImpl implements HelloService{
         }
 
         //Announce start
-        System.out.printf("Service \"%s\" starting with name \"%s\"\n", pid, name);
+        //System.out.printf("Service \"%s\" starting with name \"%s\"\n", pid, name);
+
+        //Start the announcer
+        announcerThread = new Thread(new Announcer());
+        announcerThread.start();
     }
 
     @Override
@@ -36,11 +41,35 @@ public class HelloServiceImpl implements HelloService{
         }
 
         //Announce the update
-        System.out.printf("Updating service \"%s\" with name \"%s\"\n", pid, name);
+        //System.out.printf("Updating service \"%s\" with name \"%s\"\n", pid, name);
     }
 
     @Override
     public synchronized void announce(){
         System.out.printf("%s: My name is %s!\n", pid, name);
+    }
+
+    @Override
+    public void stop(){
+        //System.out.printf("Stopping service with name \"%s\"\n", name);
+        announcerThread.interrupt();
+    }
+
+    class Announcer implements Runnable{
+        @Override
+        public void run() {
+            //System.out.printf("Announcer starting for \"%s\"\n", name);
+            while(true){
+                announce();
+                try {
+                    Thread.sleep(10_000);
+                } catch (InterruptedException e) {
+                    //System.out.printf("Announcer ending for \"%s\"\n", name);
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }
+
     }
 }
