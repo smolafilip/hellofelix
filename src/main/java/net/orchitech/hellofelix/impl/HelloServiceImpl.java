@@ -2,29 +2,45 @@ package net.orchitech.hellofelix.impl;
 
 import java.util.Dictionary;
 
+import org.osgi.framework.Constants;
+
 import net.orchitech.hellofelix.HelloService;
 
 public class HelloServiceImpl implements HelloService{
 
-    public static final String NULL_NAME = "no-name";
-    public static final String NAME_PROPERTY = "name";
+    private volatile String name = NULL_NAME;
+    private String pid;
 
-    private String name = NULL_NAME;
+    @Override
+    public void start(Dictionary<String, ?> properties){
+        //Read the properties
+        if (properties != null) {
+            name = properties.get(NAME_PROPERTY).toString();
+            pid = properties.get(Constants.SERVICE_PID).toString();
+        } else {
+            name = NULL_NAME;
+            pid = NULL_PID;
+        }
+
+        //Announce start
+        System.out.printf("Service \"%s\" starting with name \"%s\"\n", pid, name);
+    }
 
     @Override
     public void updated(Dictionary<String, ?> properties) {
-        System.out.println("props updated");
+        //Update the name
         if (properties != null) {
             name = properties.get(NAME_PROPERTY).toString();
         } else {
             name = NULL_NAME;
         }
-        announce();
+
+        //Announce the update
+        System.out.printf("Updating service \"%s\" with name \"%s\"\n", pid, name);
     }
 
     @Override
-    public void announce(){
-        System.out.printf("My name is %s!\n", name);
+    public synchronized void announce(){
+        System.out.printf("%s: My name is %s!\n", pid, name);
     }
-
 }
